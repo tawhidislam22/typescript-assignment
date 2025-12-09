@@ -98,17 +98,3 @@ type Product={
     discount?:number;
 }
 
-type CalculateTotalPrice=(products: Product[]) => number;
-
-const calculateTotalPrice: CalculateTotalPrice=(products)=>{
-    return products.reduce((total, product)=>{
-        if(product.discount){
-            total=total + (product.price * product.quantity * (1 - product.discount / 100));
-        }
-        else{
-            total=total + (product.price * product.quantity);
-        }
-        return total;
-    },0)
-}
-

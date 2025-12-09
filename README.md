@@ -168,7 +168,7 @@ const user = { name: "Karim", age: 30 };
 
 updateValue(user, "name", "Rahim"); // Valid
 updateValue(user, "age", 40);       // Valid
-// updateValue(user, "email", "abc@gmail.com"); ❌ Error — "email" নেই
+// updateValue(user, "email", "abc@gmail.com"); Error — "email" নেই
 
 
 এখানে দেখা যাচ্ছে:
