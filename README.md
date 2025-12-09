@@ -127,9 +127,7 @@ Dynamic property access কে নিরাপদ করতে
 
 # Example
 
-নীচের উদাহরণে Person নামে একটি টাইপ আছে।
-keyof Person লিখলে এটি "name" | "age" | "email"—এই union টাইপ রিটার্ন করবে।
-
+# Example 1: Basic ব্যবহার
 type Person = {
   name: string;
   age: number;
@@ -140,8 +138,10 @@ type PersonKeys = keyof Person;
 // PersonKeys = "name" | "age" | "email"
 
 
-এখন নিচে একটি ফাংশন দেখানো হলো, যেটি শুধুমাত্র Person-এর বৈধ key ব্যবহার করতে দেয়:
+এখানে PersonKeys টাইপ হবে:
+"name" | "age" | "email"
 
+# Example 2: টাইপ-সেফ ডায়নামিক অ্যাক্সেস
 function getValue(obj: Person, key: keyof Person) {
   return obj[key];
 }
@@ -156,7 +156,51 @@ console.log(getValue(person, "name"));   // Rahim
 console.log(getValue(person, "email"));  // rahim@gmail.com
 
 
-যদি কেউ "address" এর মতো invalid key পাঠানোর চেষ্টা করে, TypeScript সাথে সাথে error দেখাবে।
+TypeScript এখানে নিশ্চিত করছে যে key অবশ্যই "name" | "age" | "email" এর একটি হবে।
+"address" দিলে সাথে সাথে compile-time error দেবে।
+
+# Example 3: keyof এর সাথে generic ব্যবহার (Advanced & Important)
+function updateValue<T, K extends keyof T>(obj: T, key: K, value: T[K]) {
+  obj[key] = value;
+}
+
+const user = { name: "Karim", age: 30 };
+
+updateValue(user, "name", "Rahim"); // Valid
+updateValue(user, "age", 40);       // Valid
+// updateValue(user, "email", "abc@gmail.com"); ❌ Error — "email" নেই
+
+
+এখানে দেখা যাচ্ছে:
+
+keyof T object এর key control করছে
+
+T[K] automatically সেই key-এর value type detect করছে
+
+এটাই TypeScript-এর সবচেয়ে powerful ফিচারগুলোর একটি।
+
+# Example 4: keyof with Mapping Types
+type Person = {
+  name: string;
+  age: number;
+};
+
+type ReadOnlyPerson = {
+  [K in keyof Person]: Person[K];
+};
+
+
+এখানে keyof ব্যবহার করে mapping করা হয়েছে।
+এটি বড় বড় object কে manipulate করতে দারুণ কাজে লাগে।
+
+# Example 5: keyof with Arrays
+type FoodList = string[];
+
+type FoodKeys = keyof FoodList; 
+// "length" | "toString" | ... etc.
+
+
+Array-ও object, তাই তার method এবং property গুলোই key হিসেবে পাওয়া যায়।
 
 # Conclusion
 
